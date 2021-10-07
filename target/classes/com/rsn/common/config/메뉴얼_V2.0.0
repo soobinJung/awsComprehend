@@ -1,0 +1,56 @@
+Maven으로 이루어진 Daemon 프로젝트 개발을 위한 기본 프로젝트이다.
+
+사용법
+
+1. 설정
+  1-1. 프로젝트 기본 설정
+    1-1-1. pom.xml
+    <artifactId> : 프로젝트의 고유 명으로 수정
+    
+    1-1-2. application.properties
+    log_dir : 프로세스 로그 파일 경로
+  
+  1-2. myBatis 설정
+    1-2-1. application.properties
+    connection 샘플 정보 복사 후 Connection 정보 추가
+    
+    1-2-1. myBatisConfig.xml
+   	application.properties에 추가된 Connection 정보를 바탕으로 <environment> 재정의
+  
+  1-3. Log4j 설정
+    ApplicationRun.java를 이용하여 프로세스 실행시 RootLogger를 기준으로 자동 세팅
+    
+    개발자 커스텀 필요시 자유롭게 세팅
+
+
+2. 프로세스 개발
+샘플 -> com.rsn.common.def 패키지
+
+  2-1. job Class
+  데몬에서 실행 전 후로 기본적인 에러의 대한 Alimi 발송, Log를 처리해준다.
+  개발자가 프로젝트 내에서 데몬 프로세스 전 후로 실행해야 하는 부분이 있으면 수정해서 사용 
+  
+  Class를 생성후
+  ExcutorAbstract 추상화 클래스를 상속 받고
+  ExcutorJobTemplate 인터페이스에 명시된 run 메서드를 Override하여 프로세스를 완성하면 된다.
+  
+  2-2 dao Class
+  Mybatis를 사용하여 DB를 사용한다면 ManagerMybatisConncetion를 사용하여
+  SqlSession을 생성하여 사용할 것을 권장한다. 객체 동일성 보장
+  
+  
+3. 프로세스 실행
+  3-1. ExcutorAbstract 클래스
+  excutor(핸드폰 번호) 메서드를 활용한 실행
+  
+  3-2. ApplicationRun.java를 활용한 실행
+  Maven을 활용한 Jar로 패키징시 jar 기본 클래스가 ApplicationRun.java로 되어있음.
+  리눅스 실행시 : ./파일명.jar 핸드폰번호 패키지클래스
+  예시 : ./DaemonMaven-2.0.0-jar-with-dependencies.jar 01088540558 com.rsn.def.job.DefaultJob
+  
+  이클립스에서 실행시 : test.java 활용
+
+
+#### 정보
+파일명-jar-with-dependencies.jar -> Maven Dependencie 라이브러리 포함
+파일명.jar -> Maven Dependencie 라이브러리 미포함
